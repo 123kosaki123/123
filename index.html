@@ -1,297 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>LingoLift - English Learning</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0c1022" />
+    <title>iOS 18 Weather Cards</title>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="site-header">
-      <div class="container nav-container">
-        <div class="brand">
-          <img src="https://picsum.photos/seed/lingolift/64/64" alt="Logo" class="brand-logo" />
-          <span class="brand-name">LingoLift</span>
-        </div>
-        <nav class="top-nav" aria-label="Primary">
-          <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#vocabulary">Vocabulary</a></li>
-            <li><a href="#listening">Listening</a></li>
-            <li><a href="#speaking">Speaking</a></li>
-            <li><a href="#reading">Reading</a></li>
-            <li><a href="#writing">Writing</a></li>
-            <li><a href="#grammar">Grammar</a></li>
-            <li><a href="#community">Community</a></li>
-            <li><a href="#tools">Tools</a></li>
-            <li><a href="#about">About</a></li>
-          </ul>
-        </nav>
+    <div class="bg">
+      <div class="bg-gradient"></div>
+      <div class="bg-noise" aria-hidden="true"></div>
+      <div class="bg-aurora" aria-hidden="true"></div>
+    </div>
+
+    <header class="page-header">
+      <div class="title-group">
+        <h1 class="title">Cupertino</h1>
+        <p class="subtitle" id="dateText">—</p>
+      </div>
+      <div class="status-chips" role="toolbar" aria-label="Quick filters">
+        <button class="chip active" aria-pressed="true">Today</button>
+        <button class="chip" aria-pressed="false">Hourly</button>
+        <button class="chip" aria-pressed="false">10‑Day</button>
       </div>
     </header>
 
-    <main>
-      <!-- Home / Dashboard -->
-      <section id="home" class="section hero-section">
-        <div class="container">
-          <div class="hero-grid">
-            <div class="hero-left">
-              <h1>Welcome back!</h1>
-              <p class="muted">Today's learning plan • <span id="todayDate"></span></p>
-              <ul class="plan-list" id="planList">
-                <li><input type="checkbox" data-progress="vocab" /> Review 10 new words</li>
-                <li><input type="checkbox" data-progress="listening" /> Complete 1 listening dictation</li>
-                <li><input type="checkbox" data-progress="speaking" /> 5 minutes of AI speaking practice</li>
-                <li><input type="checkbox" data-progress="reading" /> Read 1 short article</li>
-                <li><input type="checkbox" data-progress="writing" /> Write 5 sentences and correct</li>
-              </ul>
-
-              <div class="quick-actions">
-                <button class="btn btn-accent" data-jump="#vocabulary">Today's Words</button>
-                <button class="btn btn-accent" data-jump="#speaking">AI Speaking</button>
-                <button class="btn btn-accent" data-jump="#listening">Listening Challenge</button>
-                <button class="btn btn-accent" data-jump="#reading">Reading Practice</button>
-              </div>
-
-              <div class="progress-wrap" aria-label="Learning progress">
-                <div class="progress-bar"><span id="progressInner" style="width: 0%"></span></div>
-                <div class="progress-text"><span id="progressText">0%</span> complete</div>
-              </div>
-            </div>
-            <div class="hero-right">
-              <img src="https://picsum.photos/seed/english-study/960/540" alt="Study illustration" />
-            </div>
+    <main class="weather-grid" aria-label="Weather overview">
+      <!-- Sunny -->
+      <article class="weather-card sunny" tabindex="0" aria-label="Sunny card" data-depth-root>
+        <div class="card-bg"></div>
+        <div class="sheen" aria-hidden="true"></div>
+        <div class="icon-layer" data-depth="12">
+          <svg class="icon icon-sun" viewBox="0 0 200 200" aria-hidden="true">
+            <defs>
+              <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#fff8cc" />
+                <stop offset="60%" stop-color="#ffe27a" />
+                <stop offset="100%" stop-color="#ffc542" />
+              </radialGradient>
+            </defs>
+            <g class="sun">
+              <circle cx="100" cy="100" r="40" fill="url(#sunGrad)" />
+              <g class="rays">
+                <g>
+                  <rect x="98" y="8" width="4" height="30" rx="2"/>
+                  <rect x="98" y="162" width="4" height="30" rx="2"/>
+                  <rect x="162" y="98" width="30" height="4" rx="2"/>
+                  <rect x="8" y="98" width="30" height="4" rx="2"/>
+                </g>
+                <g transform="rotate(45 100 100)">
+                  <rect x="98" y="8" width="4" height="30" rx="2"/>
+                  <rect x="98" y="162" width="4" height="30" rx="2"/>
+                  <rect x="162" y="98" width="30" height="4" rx="2"/>
+                  <rect x="8" y="98" width="30" height="4" rx="2"/>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="content-layer" data-depth="6">
+          <div class="temp">72°</div>
+          <div class="label">Sunny</div>
+          <div class="meta">
+            <span>UV 4</span>
+            <span>Humidity 42%</span>
+            <span>Wind 5 mph</span>
           </div>
         </div>
-      </section>
+        <button class="tap" aria-label="Open Sunny details"></button>
+      </article>
 
-      <!-- Vocabulary -->
-      <section id="vocabulary" class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>Vocabulary</h2>
-            <p class="muted">Daily word cards with pronunciation and examples</p>
-          </div>
-          <div id="vocabCards" class="card-grid"></div>
+      <!-- Windy -->
+      <article class="weather-card windy" tabindex="0" aria-label="Windy card" data-depth-root>
+        <div class="card-bg"></div>
+        <div class="sheen" aria-hidden="true"></div>
+        <div class="icon-layer" data-depth="12">
+          <svg class="icon icon-wind" viewBox="0 0 200 200" aria-hidden="true">
+            <g class="gust" stroke-linecap="round" fill="none" stroke-width="8">
+              <path d="M10 70 Q 70 60 120 70 T 190 70" />
+              <path d="M20 100 Q 80 90 130 100 T 200 100" />
+              <path d="M0 130 Q 60 120 110 130 T 180 130" />
+            </g>
+            <g class="leaf">
+              <circle cx="30" cy="90" r="4" />
+              <circle cx="60" cy="120" r="3" />
+              <circle cx="100" cy="80" r="3.5" />
+            </g>
+          </svg>
         </div>
-      </section>
-
-      <!-- Listening -->
-      <section id="listening" class="section alt">
-        <div class="container">
-          <div class="section-head">
-            <h2>Listening</h2>
-            <p class="muted">Play audio, control speed, and try dictation</p>
-          </div>
-
-          <div class="listening-wrap">
-            <div class="listen-controls">
-              <label for="listenRate">Speed: <span id="listenRateValue">1.0x</span></label>
-              <input id="listenRate" type="range" min="0.6" max="1.4" step="0.1" value="1" />
-              <button class="btn" id="listenPlay">Play Sample</button>
-            </div>
-
-            <div class="dictation">
-              <p class="muted">Type what you hear:</p>
-              <textarea id="dictationInput" rows="4" placeholder="Start typing..."></textarea>
-              <div class="dictation-actions">
-                <button class="btn btn-primary" id="dictationCheck">Auto-score</button>
-                <span id="dictationScore" class="score"></span>
-              </div>
-            </div>
+        <div class="content-layer" data-depth="6">
+          <div class="temp">58°</div>
+          <div class="label">Windy</div>
+          <div class="meta">
+            <span>Gusts 22 mph</span>
+            <span>Feels 55°</span>
+            <span>Visibility 8 mi</span>
           </div>
         </div>
-      </section>
+        <button class="tap" aria-label="Open Windy details"></button>
+      </article>
 
-      <!-- Speaking -->
-      <section id="speaking" class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>Speaking</h2>
-            <p class="muted">AI roleplay with speech recognition and instant feedback</p>
-          </div>
-
-          <div class="chat">
-            <div id="chatLog" class="chat-log" aria-live="polite"></div>
-            <div class="chat-controls">
-              <input id="chatInput" type="text" placeholder="Say or type your line..." />
-              <button class="btn" id="micBtn">🎙️ Speak</button>
-              <button class="btn btn-primary" id="sendBtn">Send</button>
-            </div>
-            <div id="speakingFeedback" class="muted small"></div>
+      <!-- Stormy -->
+      <article class="weather-card stormy" tabindex="0" aria-label="Stormy card" data-depth-root>
+        <div class="card-bg"></div>
+        <div class="sheen" aria-hidden="true"></div>
+        <div class="icon-layer" data-depth="12">
+          <svg class="icon icon-storm" viewBox="0 0 200 200" aria-hidden="true">
+            <g class="cloud">
+              <ellipse cx="80" cy="90" rx="40" ry="24" />
+              <ellipse cx="120" cy="90" rx="46" ry="28" />
+              <ellipse cx="100" cy="80" rx="34" ry="22" />
+            </g>
+            <g class="rain">
+              <rect x="70" y="115" width="3" height="20" rx="1.5" />
+              <rect x="90" y="115" width="3" height="24" rx="1.5" />
+              <rect x="110" y="115" width="3" height="20" rx="1.5" />
+              <rect x="130" y="115" width="3" height="22" rx="1.5" />
+            </g>
+            <g class="bolt">
+              <path d="M102 110 L88 140 L104 140 L92 170 L126 132 L110 132 Z" />
+            </g>
+          </svg>
+        </div>
+        <div class="content-layer" data-depth="6">
+          <div class="temp">64°</div>
+          <div class="label">Stormy</div>
+          <div class="meta">
+            <span>Rain 90%</span>
+            <span>Thunder</span>
+            <span>Wind 18 mph</span>
           </div>
         </div>
-      </section>
+        <button class="tap" aria-label="Open Stormy details"></button>
+      </article>
 
-      <!-- Reading -->
-      <section id="reading" class="section alt">
-        <div class="container">
-          <div class="section-head">
-            <h2>Reading</h2>
-            <p class="muted">Browse articles. Click highlighted words for definitions.</p>
-          </div>
-
-          <div id="articleList" class="article-list"></div>
+      <!-- Snowy -->
+      <article class="weather-card snowy" tabindex="0" aria-label="Snowy card" data-depth-root>
+        <div class="card-bg"></div>
+        <div class="sheen" aria-hidden="true"></div>
+        <div class="icon-layer" data-depth="12">
+          <svg class="icon icon-snow" viewBox="0 0 200 200" aria-hidden="true">
+            <g class="flake flake-a">
+              <path d="M100 60 L100 140" />
+              <path d="M60 100 L140 100" />
+              <path d="M75 75 L125 125" />
+              <path d="M125 75 L75 125" />
+            </g>
+            <g class="flake flake-b">
+              <circle cx="70" cy="80" r="3" />
+              <circle cx="140" cy="120" r="2.5" />
+              <circle cx="120" cy="70" r="2.5" />
+              <circle cx="80" cy="130" r="2.5" />
+            </g>
+          </svg>
         </div>
-      </section>
-
-      <!-- Writing -->
-      <section id="writing" class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>Writing</h2>
-            <p class="muted">Write and get instant correction feedback</p>
-          </div>
-
-          <div class="writing-wrap">
-            <textarea id="writingInput" rows="6" placeholder="Write a short paragraph about your day..."></textarea>
-            <div class="writing-actions">
-              <button class="btn btn-primary" id="correctBtn">AI Correction</button>
-            </div>
-            <div id="correctionOutput" class="correction"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Grammar -->
-      <section id="grammar" class="section alt">
-        <div class="container">
-          <div class="section-head">
-            <h2>Grammar</h2>
-            <p class="muted">Concise explanations with examples</p>
-          </div>
-          <div class="card-grid" id="grammarGrid"></div>
-        </div>
-      </section>
-
-      <!-- Community -->
-      <section id="community" class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>Community</h2>
-            <p class="muted">See what learners are doing today</p>
-          </div>
-          <div id="feed" class="feed"></div>
-        </div>
-      </section>
-
-      <!-- Leaderboard -->
-      <section id="leaderboard" class="section alt">
-        <div class="container">
-          <div class="section-head">
-            <h2>Leaderboard</h2>
-            <p class="muted">Top learners this week</p>
-          </div>
-          <ol id="leaderboardList" class="leaderboard"></ol>
-        </div>
-      </section>
-
-      <!-- Mistake Notebook -->
-      <section id="mistakes" class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>Mistake Notebook</h2>
-            <p class="muted">Log and review your mistakes</p>
-          </div>
-          <form id="mistakeForm" class="mistake-form">
-            <input type="text" id="mistakeText" placeholder="Mistake (e.g., I am go to home)" required />
-            <input type="text" id="mistakeFix" placeholder="Correction (e.g., I am going home)" required />
-            <button class="btn btn-primary" type="submit">Add</button>
-          </form>
-          <ul id="mistakeList" class="mistake-list"></ul>
-        </div>
-      </section>
-
-      <!-- Tools -->
-      <section id="tools" class="section alt">
-        <div class="container">
-          <div class="section-head">
-            <h2>Tools</h2>
-            <p class="muted">Dictionary, pronunciation tutorials, translation, and study calendar</p>
-          </div>
-
-          <div class="tools-grid">
-            <div class="tool-card">
-              <h3>Online Dictionary</h3>
-              <div class="tool-body">
-                <input id="dictQuery" type="text" placeholder="Enter a word (e.g., resilient)" />
-                <button class="btn" id="dictSearch">Search</button>
-                <div id="dictResult" class="dict-result"></div>
-              </div>
-            </div>
-
-            <div class="tool-card">
-              <h3>Pronunciation Tutorials</h3>
-              <div class="tool-body">
-                <img src="https://picsum.photos/seed/pronunciation/640/360" alt="Pronunciation tutorial" />
-                <ul class="muted small">
-                  <li>Vowel sounds: /ɪ/ vs /iː/</li>
-                  <li>Linking and connected speech</li>
-                  <li>Stress and intonation patterns</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="tool-card">
-              <h3>Translation Tool</h3>
-              <div class="tool-body">
-                <textarea id="translateInput" rows="3" placeholder="Enter text to translate..."></textarea>
-                <div class="row">
-                  <label for="translateLang">Target:</label>
-                  <select id="translateLang">
-                    <option value="zh">Chinese</option>
-                    <option value="es">Spanish</option>
-                    <option value="ja">Japanese</option>
-                    <option value="fr">French</option>
-                  </select>
-                </div>
-                <button class="btn" id="translateBtn">Translate</button>
-                <div id="translateOutput" class="translate-output"></div>
-              </div>
-            </div>
-
-            <div class="tool-card">
-              <h3>Study Calendar</h3>
-              <div class="tool-body">
-                <div id="calendar" class="calendar"></div>
-                <div class="muted small">Click a day to mark as studied.</div>
-              </div>
-            </div>
+        <div class="content-layer" data-depth="6">
+          <div class="temp">30°</div>
+          <div class="label">Snowy</div>
+          <div class="meta">
+            <span>Snow 70%</span>
+            <span>Feels 25°</span>
+            <span>Calm</span>
           </div>
         </div>
-      </section>
-
-      <!-- About -->
-      <section id="about" class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>About</h2>
-            <p class="muted">This is a prototype. Replace placeholder images and text with your own content easily.</p>
-          </div>
-          <div class="about-grid">
-            <img src="https://picsum.photos/seed/about/720/360" alt="About" />
-            <div>
-              <h3>Our Mission</h3>
-              <p>
-                Help learners build balanced English skills across vocabulary, listening, speaking,
-                reading, writing, and grammar — with supportive community and tools.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+        <button class="tap" aria-label="Open Snowy details"></button>
+      </article>
     </main>
 
-    <footer class="site-footer">
-      <div class="container">
-        <span>© <span id="year"></span> LingoLift</span>
-        <span class="muted">Made with ❤ for learning</span>
-      </div>
+    <footer class="page-footer">
+      <small>Designed in the spirit of iOS 18 • Demo</small>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="./script.js"></script>
   </body>
 </html>
