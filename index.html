@@ -1,265 +1,297 @@
-<!doctype html>
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#0b5bd3" />
-    <title>MathLearn · 让数学更简单，让逻辑更清晰</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LingoLift - English Learning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Prefer system fonts; webfonts are optional and skipped to keep offline-ready -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <a class="skip-link" href="#main">跳到主要内容</a>
-
-    <header class="site-header" role="banner">
+    <header class="site-header">
       <div class="container nav-container">
-        <a href="#home" class="logo" aria-label="MathLearn 首页">
-          <!-- 几何风 Logo：由圆、三角、积分符号构成 -->
-          <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-            <defs>
-              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#5bb8ff" />
-                <stop offset="100%" stop-color="#005bff" />
-              </linearGradient>
-            </defs>
-            <rect x="0" y="0" width="40" height="40" rx="8" fill="url(#g1)" />
-            <circle cx="13" cy="14" r="6" fill="none" stroke="#fff" stroke-width="2" />
-            <path d="M25 26 L33 26 L29 18 Z" fill="none" stroke="#fff" stroke-width="2" />
-            <path d="M9 31 q6-20 12-20 q4 0 7 3" fill="none" stroke="#fff" stroke-width="2" />
-          </svg>
-          <span class="brand">MathLearn</span>
-        </a>
-
-        <nav class="main-nav" aria-label="主菜单">
+        <div class="brand">
+          <img src="https://picsum.photos/seed/lingolift/64/64" alt="Logo" class="brand-logo" />
+          <span class="brand-name">LingoLift</span>
+        </div>
+        <nav class="top-nav" aria-label="Primary">
           <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#courses">课程</a></li>
-            <li><a href="#bank">题库</a></li>
-            <li><a href="#tools">工具</a></li>
-            <li><a href="#forum">论坛</a></li>
-            <li><a href="#about">关于</a></li>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#vocabulary">Vocabulary</a></li>
+            <li><a href="#listening">Listening</a></li>
+            <li><a href="#speaking">Speaking</a></li>
+            <li><a href="#reading">Reading</a></li>
+            <li><a href="#writing">Writing</a></li>
+            <li><a href="#grammar">Grammar</a></li>
+            <li><a href="#community">Community</a></li>
+            <li><a href="#tools">Tools</a></li>
+            <li><a href="#about">About</a></li>
           </ul>
         </nav>
-
-        <div class="header-actions">
-          <div class="auth-buttons" role="group" aria-label="认证">
-            <button class="btn btn-ghost" type="button">登录</button>
-            <button class="btn btn-primary" type="button">注册</button>
-          </div>
-          <button id="themeToggle" class="icon-button" type="button" aria-label="切换夜间模式" title="夜间模式">
-            <span class="icon-sun" aria-hidden="true">☀</span>
-            <span class="icon-moon" aria-hidden="true">🌙</span>
-          </button>
-        </div>
       </div>
     </header>
 
-    <main id="main">
-      <!-- 头图区域 -->
-      <section id="home" class="hero" aria-label="头图与标语">
-        <div class="hero-bg">
-          <div class="grid-layer" aria-hidden="true"></div>
-          <div class="glow-layer" aria-hidden="true"></div>
-        </div>
-        <div class="container hero-content">
-          <h1>让数学更简单，让逻辑更清晰</h1>
-          <p class="subtitle">从基础到竞赛，从工具到社区，一站式高效数学学习平台</p>
-          <div class="hero-cta">
-            <a href="#courses" class="btn btn-solid">开始学习</a>
-            <a href="#tools" class="btn btn-ghost">探索工具</a>
-          </div>
-          <!-- 动态公式与几何元素 -->
-          <div class="formula-cloud" aria-hidden="true">
-            <span class="formula f1">e<sup>iπ</sup> + 1 = 0</span>
-            <span class="formula f2">∫<sub>0</sub><sup>1</sup> x² dx</span>
-            <span class="formula f3">Σ<sub>k=1</sub><sup>n</sup> k = n(n+1)/2</span>
-            <span class="formula f4">lim<sub>x→0</sub> sinx/x = 1</span>
-            <span class="formula f5">ΔABC</span>
-            <span class="formula f6">f(x) = ax² + bx + c</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- 学习模块区 -->
-      <section id="courses" class="section section-cards" aria-labelledby="courses-title">
+    <main>
+      <!-- Home / Dashboard -->
+      <section id="home" class="section hero-section">
         <div class="container">
-          <h2 id="courses-title">学习模块</h2>
-          <div class="card-grid cols-4">
-            <article class="card">
-              <div class="card-illus" aria-hidden="true">
-                <svg viewBox="0 0 120 80"><rect x="8" y="20" width="104" height="40" rx="8" class="illu-box"/><text x="60" y="48" text-anchor="middle" class="illu-txt">函数</text></svg>
-              </div>
-              <h3>高中数学</h3>
-              <p>涵盖必修与选修：函数、导数、立体几何、概率统计等系统课程。</p>
-              <div class="card-actions"><a class="btn btn-solid" href="#bank">开始学习</a></div>
-            </article>
+          <div class="hero-grid">
+            <div class="hero-left">
+              <h1>Welcome back!</h1>
+              <p class="muted">Today's learning plan • <span id="todayDate"></span></p>
+              <ul class="plan-list" id="planList">
+                <li><input type="checkbox" data-progress="vocab" /> Review 10 new words</li>
+                <li><input type="checkbox" data-progress="listening" /> Complete 1 listening dictation</li>
+                <li><input type="checkbox" data-progress="speaking" /> 5 minutes of AI speaking practice</li>
+                <li><input type="checkbox" data-progress="reading" /> Read 1 short article</li>
+                <li><input type="checkbox" data-progress="writing" /> Write 5 sentences and correct</li>
+              </ul>
 
-            <article class="card">
-              <div class="card-illus" aria-hidden="true">
-                <svg viewBox="0 0 120 80"><polygon points="20,60 60,20 100,60" class="illu-poly"/><text x="60" y="50" text-anchor="middle" class="illu-txt">竞赛</text></svg>
+              <div class="quick-actions">
+                <button class="btn btn-accent" data-jump="#vocabulary">Today's Words</button>
+                <button class="btn btn-accent" data-jump="#speaking">AI Speaking</button>
+                <button class="btn btn-accent" data-jump="#listening">Listening Challenge</button>
+                <button class="btn btn-accent" data-jump="#reading">Reading Practice</button>
               </div>
-              <h3>奥数 / 竞赛</h3>
-              <p>数论、组合、几何与不等式专题精讲，提升思维与解题速度。</p>
-              <div class="card-actions"><a class="btn btn-solid" href="#bank">开始学习</a></div>
-            </article>
 
-            <article class="card">
-              <div class="card-illus" aria-hidden="true">
-                <svg viewBox="0 0 120 80"><path d="M15 60 C30 20, 90 20, 105 60" class="illu-curve"/><text x="60" y="50" text-anchor="middle" class="illu-txt">高数</text></svg>
+              <div class="progress-wrap" aria-label="Learning progress">
+                <div class="progress-bar"><span id="progressInner" style="width: 0%"></span></div>
+                <div class="progress-text"><span id="progressText">0%</span> complete</div>
               </div>
-              <h3>大学数学</h3>
-              <p>高等数学、线性代数、概率论与数理统计、复变函数与数值分析。</p>
-              <div class="card-actions"><a class="btn btn-solid" href="#bank">开始学习</a></div>
-            </article>
-
-            <article class="card">
-              <div class="card-illus" aria-hidden="true">
-                <svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="22" class="illu-circle"/><text x="60" y="45" text-anchor="middle" class="illu-txt">趣味</text></svg>
-              </div>
-              <h3>趣味数学</h3>
-              <p>数独、数学魔术、图形谜题与数学史，激发探索兴趣与创造力。</p>
-              <div class="card-actions"><a class="btn btn-solid" href="#bank">开始学习</a></div>
-            </article>
+            </div>
+            <div class="hero-right">
+              <img src="https://picsum.photos/seed/english-study/960/540" alt="Study illustration" />
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- 工具中心 -->
-      <section id="tools" class="section section-tools" aria-labelledby="tools-title">
-        <div class="container">
-          <h2 id="tools-title">工具中心</h2>
-          <div class="tool-grid">
-            <a class="tool-card" href="#tool-calculator" aria-label="科学计算器">
-              <div class="tool-icon">🧮</div>
-              <div class="tool-info"><h3>科学计算器</h3><p>支持角度/弧度、历史记录与多步表达式。</p></div>
-            </a>
-            <a class="tool-card" href="#tool-matrix" aria-label="矩阵运算器">
-              <div class="tool-icon">🟦</div>
-              <div class="tool-info"><h3>矩阵运算器</h3><p>加减乘、行列式、逆矩阵与特征值。</p></div>
-            </a>
-            <a class="tool-card" href="#tool-equation" aria-label="方程求解器">
-              <div class="tool-icon">🧩</div>
-              <div class="tool-info"><h3>方程求解器</h3><p>一次到高次、多元方程与数值解。</p></div>
-            </a>
-            <a class="tool-card" href="#tool-stats" aria-label="统计分析工具">
-              <div class="tool-icon">📊</div>
-              <div class="tool-info"><h3>统计分析工具</h3><p>描述统计、假设检验与回归分析。</p></div>
-            </a>
-            <a class="tool-card" href="#tool-latex" aria-label="在线公式编辑器">
-              <div class="tool-icon">📝</div>
-              <div class="tool-info"><h3>在线公式编辑器</h3><p>LaTeX 即时渲染与分享导出。</p></div>
-            </a>
-            <a class="tool-card" href="#tool-plot" aria-label="函数图像绘制工具">
-              <div class="tool-icon">📈</div>
-              <div class="tool-info"><h3>函数图像绘制</h3><p>单/多函数、参数曲线与极坐标。</p></div>
-            </a>
-            <a class="tool-card" href="#tool-geometry" aria-label="几何作图工具">
-              <div class="tool-icon">📐</div>
-              <div class="tool-info"><h3>几何作图工具</h3><p>点线面基本构造与动态演示。</p></div>
-            </a>
-            <a class="tool-card" href="#tool-units" aria-label="单位换算器">
-              <div class="tool-icon">🔁</div>
-              <div class="tool-info"><h3>单位换算器</h3><p>长度、面积、体积、时间与角度等。</p></div>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- 每日挑战 -->
-      <section id="challenge" class="section section-challenge" aria-labelledby="challenge-title">
+      <!-- Vocabulary -->
+      <section id="vocabulary" class="section">
         <div class="container">
           <div class="section-head">
-            <h2 id="challenge-title">每日挑战</h2>
-            <div class="challenge-actions">
-              <button id="startQuizBtn" class="btn btn-primary">开始答题</button>
-              <button id="wrongBookBtn" class="btn btn-ghost">查看错题本</button>
-            </div>
+            <h2>Vocabulary</h2>
+            <p class="muted">Daily word cards with pronunciation and examples</p>
           </div>
-
-          <div class="progress-wrap" aria-label="答题进度">
-            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0">
-              <div class="progress-fill"></div>
-            </div>
-            <span class="progress-text" aria-live="polite">0 / 10</span>
-          </div>
-
-          <ol id="challengeList" class="challenge-list" aria-live="polite"></ol>
+          <div id="vocabCards" class="card-grid"></div>
         </div>
       </section>
 
-      <!-- 学习社区 -->
-      <section id="community" class="section section-community" aria-labelledby="community-title">
+      <!-- Listening -->
+      <section id="listening" class="section alt">
         <div class="container">
-          <h2 id="community-title">学习社区</h2>
-          <div class="community-grid">
-            <div class="community-block">
-              <h3>热门讨论帖</h3>
-              <ul class="list">
-                <li><a href="#forum">如何直观理解傅里叶变换？</a></li>
-                <li><a href="#forum">几何不等式常用技巧汇总</a></li>
-                <li><a href="#forum">从极限到导数的严谨定义</a></li>
-              </ul>
+          <div class="section-head">
+            <h2>Listening</h2>
+            <p class="muted">Play audio, control speed, and try dictation</p>
+          </div>
+
+          <div class="listening-wrap">
+            <div class="listen-controls">
+              <label for="listenRate">Speed: <span id="listenRateValue">1.0x</span></label>
+              <input id="listenRate" type="range" min="0.6" max="1.4" step="0.1" value="1" />
+              <button class="btn" id="listenPlay">Play Sample</button>
             </div>
-            <div class="community-block">
-              <h3>最新题解</h3>
-              <ul class="list">
-                <li><a href="#forum">2024 省赛压轴题详解</a></li>
-                <li><a href="#forum">线代期末选择题错因分析</a></li>
-                <li><a href="#forum">概率论大题的套路与陷阱</a></li>
-              </ul>
-            </div>
-            <div class="community-block">
-              <h3>资料分享</h3>
-              <ul class="list">
-                <li><a href="#forum">LaTeX 数学公式速查表（可打印）</a></li>
-                <li><a href="#forum">竞赛训练题单（分难度）</a></li>
-                <li><a href="#forum">大学数学复习清单</a></li>
-              </ul>
+
+            <div class="dictation">
+              <p class="muted">Type what you hear:</p>
+              <textarea id="dictationInput" rows="4" placeholder="Start typing..."></textarea>
+              <div class="dictation-actions">
+                <button class="btn btn-primary" id="dictationCheck">Auto-score</button>
+                <span id="dictationScore" class="score"></span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 占位锚点 -->
-      <section id="bank" class="section sr-only" aria-hidden="true"></section>
-      <section id="forum" class="section sr-only" aria-hidden="true"></section>
-      <section id="about" class="section sr-only" aria-hidden="true"></section>
+      <!-- Speaking -->
+      <section id="speaking" class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>Speaking</h2>
+            <p class="muted">AI roleplay with speech recognition and instant feedback</p>
+          </div>
+
+          <div class="chat">
+            <div id="chatLog" class="chat-log" aria-live="polite"></div>
+            <div class="chat-controls">
+              <input id="chatInput" type="text" placeholder="Say or type your line..." />
+              <button class="btn" id="micBtn">🎙️ Speak</button>
+              <button class="btn btn-primary" id="sendBtn">Send</button>
+            </div>
+            <div id="speakingFeedback" class="muted small"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reading -->
+      <section id="reading" class="section alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>Reading</h2>
+            <p class="muted">Browse articles. Click highlighted words for definitions.</p>
+          </div>
+
+          <div id="articleList" class="article-list"></div>
+        </div>
+      </section>
+
+      <!-- Writing -->
+      <section id="writing" class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>Writing</h2>
+            <p class="muted">Write and get instant correction feedback</p>
+          </div>
+
+          <div class="writing-wrap">
+            <textarea id="writingInput" rows="6" placeholder="Write a short paragraph about your day..."></textarea>
+            <div class="writing-actions">
+              <button class="btn btn-primary" id="correctBtn">AI Correction</button>
+            </div>
+            <div id="correctionOutput" class="correction"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Grammar -->
+      <section id="grammar" class="section alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>Grammar</h2>
+            <p class="muted">Concise explanations with examples</p>
+          </div>
+          <div class="card-grid" id="grammarGrid"></div>
+        </div>
+      </section>
+
+      <!-- Community -->
+      <section id="community" class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>Community</h2>
+            <p class="muted">See what learners are doing today</p>
+          </div>
+          <div id="feed" class="feed"></div>
+        </div>
+      </section>
+
+      <!-- Leaderboard -->
+      <section id="leaderboard" class="section alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>Leaderboard</h2>
+            <p class="muted">Top learners this week</p>
+          </div>
+          <ol id="leaderboardList" class="leaderboard"></ol>
+        </div>
+      </section>
+
+      <!-- Mistake Notebook -->
+      <section id="mistakes" class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>Mistake Notebook</h2>
+            <p class="muted">Log and review your mistakes</p>
+          </div>
+          <form id="mistakeForm" class="mistake-form">
+            <input type="text" id="mistakeText" placeholder="Mistake (e.g., I am go to home)" required />
+            <input type="text" id="mistakeFix" placeholder="Correction (e.g., I am going home)" required />
+            <button class="btn btn-primary" type="submit">Add</button>
+          </form>
+          <ul id="mistakeList" class="mistake-list"></ul>
+        </div>
+      </section>
+
+      <!-- Tools -->
+      <section id="tools" class="section alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>Tools</h2>
+            <p class="muted">Dictionary, pronunciation tutorials, translation, and study calendar</p>
+          </div>
+
+          <div class="tools-grid">
+            <div class="tool-card">
+              <h3>Online Dictionary</h3>
+              <div class="tool-body">
+                <input id="dictQuery" type="text" placeholder="Enter a word (e.g., resilient)" />
+                <button class="btn" id="dictSearch">Search</button>
+                <div id="dictResult" class="dict-result"></div>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <h3>Pronunciation Tutorials</h3>
+              <div class="tool-body">
+                <img src="https://picsum.photos/seed/pronunciation/640/360" alt="Pronunciation tutorial" />
+                <ul class="muted small">
+                  <li>Vowel sounds: /ɪ/ vs /iː/</li>
+                  <li>Linking and connected speech</li>
+                  <li>Stress and intonation patterns</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <h3>Translation Tool</h3>
+              <div class="tool-body">
+                <textarea id="translateInput" rows="3" placeholder="Enter text to translate..."></textarea>
+                <div class="row">
+                  <label for="translateLang">Target:</label>
+                  <select id="translateLang">
+                    <option value="zh">Chinese</option>
+                    <option value="es">Spanish</option>
+                    <option value="ja">Japanese</option>
+                    <option value="fr">French</option>
+                  </select>
+                </div>
+                <button class="btn" id="translateBtn">Translate</button>
+                <div id="translateOutput" class="translate-output"></div>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <h3>Study Calendar</h3>
+              <div class="tool-body">
+                <div id="calendar" class="calendar"></div>
+                <div class="muted small">Click a day to mark as studied.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section id="about" class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>About</h2>
+            <p class="muted">This is a prototype. Replace placeholder images and text with your own content easily.</p>
+          </div>
+          <div class="about-grid">
+            <img src="https://picsum.photos/seed/about/720/360" alt="About" />
+            <div>
+              <h3>Our Mission</h3>
+              <p>
+                Help learners build balanced English skills across vocabulary, listening, speaking,
+                reading, writing, and grammar — with supportive community and tools.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <footer class="site-footer" role="contentinfo">
-      <div class="container footer-container">
-        <div class="footer-brand">
-          <span class="brand">MathLearn</span>
-          <p class="muted">以科技感与学术性为核心的数学学习社区与工具平台。</p>
-        </div>
-        <nav class="footer-nav" aria-label="底部导航">
-          <a href="#about">关于</a>
-          <a href="#help">帮助</a>
-          <a href="#privacy">隐私</a>
-          <a href="#terms">条款</a>
-        </nav>
-        <p class="copyright">© <span id="year"></span> MathLearn</p>
+    <footer class="site-footer">
+      <div class="container">
+        <span>© <span id="year"></span> LingoLift</span>
+        <span class="muted">Made with ❤ for learning</span>
       </div>
     </footer>
 
-    <dialog id="wrongBookModal" class="modal">
-      <form method="dialog" class="modal-card">
-        <header class="modal-head">
-          <h3>错题本</h3>
-          <button class="icon-button" value="close" aria-label="关闭">✕</button>
-        </header>
-        <div class="modal-body">
-          <ol id="wrongList" class="list"></ol>
-        </div>
-        <footer class="modal-foot">
-          <button class="btn btn-primary" value="close">关闭</button>
-        </footer>
-      </form>
-    </dialog>
-
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
   </body>
 </html>
