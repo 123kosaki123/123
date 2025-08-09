@@ -1,178 +1,975 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0c1022" />
-    <title>iOS 18 Weather Cards</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <div class="bg">
-      <div class="bg-gradient"></div>
-      <div class="bg-noise" aria-hidden="true"></div>
-      <div class="bg-aurora" aria-hidden="true"></div>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>植物大战僵尸 - 单页版</title>
+  <style>
+    :root {
+      --bg: #102019;
+      --lawn-1: #2c5e3f;
+      --lawn-2: #2a6a44;
+      --grid-line: #1d3d2b;
+      --ui: #173327;
+      --ui-2: #0f251c;
+      --ui-text: #e9ffe9;
+      --accent: #ffd054;
+      --danger: #ff6b6b;
+      --pea: #9bef7e;
+      --nut: #8b5a2b;
+      --sun: #ffd24d;
+      --zombie: #8ea69b;
+      --shadow: rgba(0,0,0,0.25);
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(1200px 800px at 20% 0%, #123424, var(--bg));
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--ui-text);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    .frame {
+      position: relative;
+      width: 1000px;
+      height: 680px;
+      max-width: calc(100vw - 24px);
+      max-height: calc(100vh - 24px);
+      background: linear-gradient(#194232, #194232) padding-box, linear-gradient(145deg, #2a7a56, #0c1b14) border-box;
+      border: 2px solid transparent;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.05);
+      overflow: hidden;
+    }
+
+    .topbar {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 110px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: linear-gradient(180deg, var(--ui), var(--ui-2));
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      z-index: 10;
+    }
+
+    .title {
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 0 #000;
+      margin-right: 6px;
+    }
+
+    .spacer { flex: 1; }
+
+    .sun-counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 210, 77, 0.12);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-weight: 700;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+
+    .sun-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff2a8, var(--sun));
+      box-shadow: 0 0 10px #ffec99;
+    }
+
+    .seedbar {
+      display: flex;
+      gap: 10px;
+      margin-left: 8px;
+    }
+
+    .card {
+      width: 110px;
+      height: 86px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.04);
+      padding: 8px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      cursor: pointer;
+      position: relative;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .card:hover { transform: translateY(-1px); box-shadow: 0 12px 20px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.06); }
+    .card.selected { outline: 2px solid var(--accent); box-shadow: 0 0 0 3px rgba(255,208,84,0.25), 0 12px 20px rgba(0,0,0,0.28); }
+    .card.locked::after {
+      content: "冷却中";
+      position: absolute; inset: 0; display: grid; place-items: center; font-weight: 800; color: rgba(255,255,255,0.8);
+      background: rgba(0,0,0,0.45); border-radius: 10px; backdrop-filter: blur(2px);
+    }
+    .card .name { font-weight: 800; font-size: 14px; text-shadow: 0 1px 0 #000; }
+    .card .cost { font-weight: 700; font-size: 13px; color: #ffe28a; }
+
+    .help {
+      position: absolute;
+      right: 12px; bottom: 12px;
+      background: rgba(0,0,0,0.35);
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.06);
+      font-size: 12px;
+      line-height: 1.35;
+      max-width: 360px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+      z-index: 5;
+    }
+
+    canvas { display: block; position: absolute; inset: 110px 0 0 0; width: 100%; height: calc(100% - 110px); }
+
+    .overlay {
+      position: absolute; inset: 110px 0 0 0; display: grid; place-items: center; pointer-events: none;
+    }
+
+    .banner {
+      pointer-events: auto;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 18px 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+    }
+
+    .btn {
+      margin-top: 10px;
+      display: inline-block;
+      background: linear-gradient(180deg, #ffd972, #ffb347);
+      color: #3d2a00;
+      font-weight: 900;
+      border: none; border-radius: 10px; padding: 10px 16px; cursor: pointer;
+      box-shadow: 0 6px 0 #d1862a, 0 8px 16px rgba(0,0,0,0.3);
+      transition: transform .08s ease, box-shadow .08s ease;
+    }
+    .btn:active { transform: translateY(2px); box-shadow: 0 4px 0 #d1862a, 0 6px 12px rgba(0,0,0,0.3); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="frame" id="frame">
+      <div class="topbar">
+        <div class="title">植物大战僵尸 · 单页简化版</div>
+        <div class="seedbar" id="seedbar"></div>
+        <div class="spacer"></div>
+        <div class="sun-counter"><span class="sun-dot"></span><span id="sunPoints">0</span></div>
+      </div>
+      <canvas id="game"></canvas>
+      <div class="overlay">
+        <div class="help">
+          <div><b>玩法</b>：选择卡片后，点击草地格子进行种植；点击飘落或生成的阳光进行收集。</div>
+          <div><b>快捷键</b>：1 豌豆射手 · 2 向日葵 · 3 坚果 · 4 铲子 · R 重开</div>
+          <div><b>胜利条件</b>：坚持到进度条满；<b>失败条件</b>：僵尸进入你家。</div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <header class="page-header">
-      <div class="title-group">
-        <h1 class="title">Cupertino</h1>
-        <p class="subtitle" id="dateText">—</p>
-      </div>
-      <div class="status-chips" role="toolbar" aria-label="Quick filters">
-        <button class="chip active" aria-pressed="true">Today</button>
-        <button class="chip" aria-pressed="false">Hourly</button>
-        <button class="chip" aria-pressed="false">10‑Day</button>
-      </div>
-    </header>
+<script>
+(() => {
+  'use strict';
 
-    <main class="weather-grid" aria-label="Weather overview">
-      <!-- Sunny -->
-      <article class="weather-card sunny" tabindex="0" aria-label="Sunny card" data-depth-root>
-        <div class="card-bg"></div>
-        <div class="sheen" aria-hidden="true"></div>
-        <div class="icon-layer" data-depth="12">
-          <svg class="icon icon-sun" viewBox="0 0 200 200" aria-hidden="true">
-            <defs>
-              <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#fff8cc" />
-                <stop offset="60%" stop-color="#ffe27a" />
-                <stop offset="100%" stop-color="#ffc542" />
-              </radialGradient>
-            </defs>
-            <g class="sun">
-              <circle cx="100" cy="100" r="40" fill="url(#sunGrad)" />
-              <g class="rays">
-                <g>
-                  <rect x="98" y="8" width="4" height="30" rx="2"/>
-                  <rect x="98" y="162" width="4" height="30" rx="2"/>
-                  <rect x="162" y="98" width="30" height="4" rx="2"/>
-                  <rect x="8" y="98" width="30" height="4" rx="2"/>
-                </g>
-                <g transform="rotate(45 100 100)">
-                  <rect x="98" y="8" width="4" height="30" rx="2"/>
-                  <rect x="98" y="162" width="4" height="30" rx="2"/>
-                  <rect x="162" y="98" width="30" height="4" rx="2"/>
-                  <rect x="8" y="98" width="30" height="4" rx="2"/>
-                </g>
-              </g>
-            </g>
-          </svg>
-        </div>
-        <div class="content-layer" data-depth="6">
-          <div class="temp">72°</div>
-          <div class="label">Sunny</div>
-          <div class="meta">
-            <span>UV 4</span>
-            <span>Humidity 42%</span>
-            <span>Wind 5 mph</span>
-          </div>
-        </div>
-        <button class="tap" aria-label="Open Sunny details"></button>
-      </article>
+  // ---------------------- 基本配置 ----------------------
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
 
-      <!-- Windy -->
-      <article class="weather-card windy" tabindex="0" aria-label="Windy card" data-depth-root>
-        <div class="card-bg"></div>
-        <div class="sheen" aria-hidden="true"></div>
-        <div class="icon-layer" data-depth="12">
-          <svg class="icon icon-wind" viewBox="0 0 200 200" aria-hidden="true">
-            <g class="gust" stroke-linecap="round" fill="none" stroke-width="8">
-              <path d="M10 70 Q 70 60 120 70 T 190 70" />
-              <path d="M20 100 Q 80 90 130 100 T 200 100" />
-              <path d="M0 130 Q 60 120 110 130 T 180 130" />
-            </g>
-            <g class="leaf">
-              <circle cx="30" cy="90" r="4" />
-              <circle cx="60" cy="120" r="3" />
-              <circle cx="100" cy="80" r="3.5" />
-            </g>
-          </svg>
-        </div>
-        <div class="content-layer" data-depth="6">
-          <div class="temp">58°</div>
-          <div class="label">Windy</div>
-          <div class="meta">
-            <span>Gusts 22 mph</span>
-            <span>Feels 55°</span>
-            <span>Visibility 8 mi</span>
-          </div>
-        </div>
-        <button class="tap" aria-label="Open Windy details"></button>
-      </article>
+  // 画布逻辑尺寸（像素），实际显示会按 CSS 拉伸
+  const LOGICAL_WIDTH = 1000;
+  const LOGICAL_HEIGHT = 680 - 110; // 扣掉上方 UI 区域
+  const TOPBAR_HEIGHT = 110;
 
-      <!-- Stormy -->
-      <article class="weather-card stormy" tabindex="0" aria-label="Stormy card" data-depth-root>
-        <div class="card-bg"></div>
-        <div class="sheen" aria-hidden="true"></div>
-        <div class="icon-layer" data-depth="12">
-          <svg class="icon icon-storm" viewBox="0 0 200 200" aria-hidden="true">
-            <g class="cloud">
-              <ellipse cx="80" cy="90" rx="40" ry="24" />
-              <ellipse cx="120" cy="90" rx="46" ry="28" />
-              <ellipse cx="100" cy="80" rx="34" ry="22" />
-            </g>
-            <g class="rain">
-              <rect x="70" y="115" width="3" height="20" rx="1.5" />
-              <rect x="90" y="115" width="3" height="24" rx="1.5" />
-              <rect x="110" y="115" width="3" height="20" rx="1.5" />
-              <rect x="130" y="115" width="3" height="22" rx="1.5" />
-            </g>
-            <g class="bolt">
-              <path d="M102 110 L88 140 L104 140 L92 170 L126 132 L110 132 Z" />
-            </g>
-          </svg>
-        </div>
-        <div class="content-layer" data-depth="6">
-          <div class="temp">64°</div>
-          <div class="label">Stormy</div>
-          <div class="meta">
-            <span>Rain 90%</span>
-            <span>Thunder</span>
-            <span>Wind 18 mph</span>
-          </div>
-        </div>
-        <button class="tap" aria-label="Open Stormy details"></button>
-      </article>
+  // 网格
+  const GRID_ROWS = 5;
+  const GRID_COLS = 9;
+  const CELL_WIDTH = 90;
+  const CELL_HEIGHT = 90;
+  const GRID_OFFSET_X = 120; // 给割草机留空间
+  const GRID_OFFSET_Y = 10;  // 顶部留点空隙
+  const GRID_WIDTH = GRID_COLS * CELL_WIDTH;
+  const GRID_HEIGHT = GRID_ROWS * CELL_HEIGHT;
 
-      <!-- Snowy -->
-      <article class="weather-card snowy" tabindex="0" aria-label="Snowy card" data-depth-root>
-        <div class="card-bg"></div>
-        <div class="sheen" aria-hidden="true"></div>
-        <div class="icon-layer" data-depth="12">
-          <svg class="icon icon-snow" viewBox="0 0 200 200" aria-hidden="true">
-            <g class="flake flake-a">
-              <path d="M100 60 L100 140" />
-              <path d="M60 100 L140 100" />
-              <path d="M75 75 L125 125" />
-              <path d="M125 75 L75 125" />
-            </g>
-            <g class="flake flake-b">
-              <circle cx="70" cy="80" r="3" />
-              <circle cx="140" cy="120" r="2.5" />
-              <circle cx="120" cy="70" r="2.5" />
-              <circle cx="80" cy="130" r="2.5" />
-            </g>
-          </svg>
-        </div>
-        <div class="content-layer" data-depth="6">
-          <div class="temp">30°</div>
-          <div class="label">Snowy</div>
-          <div class="meta">
-            <span>Snow 70%</span>
-            <span>Feels 25°</span>
-            <span>Calm</span>
-          </div>
-        </div>
-        <button class="tap" aria-label="Open Snowy details"></button>
-      </article>
-    </main>
+  // 游戏节奏
+  const INITIAL_SUN = 150;
+  const SKY_SUN_INTERVAL = 8_000; // 天空掉阳光间隔
+  const SKY_SUN_FALL_TIME = 5_500;
+  const DIFFICULTY_DURATION = 120_000; // 2 分钟达到最大强度
 
-    <footer class="page-footer">
-      <small>Designed in the spirit of iOS 18 • Demo</small>
-    </footer>
+  // 僵尸参数
+  const ZOMBIE_BASE_SPEED = 14; // 僵尸基础速度（像素/秒）
+  const ZOMBIE_BASE_HP = 300;
+  const ZOMBIE_SPAWN_BASE = 3_500; // 初始生成间隔（ms）
+  const ZOMBIE_SPAWN_MIN = 1_400;  // 最小生成间隔（ms）
 
-    <script src="./script.js"></script>
-  </body>
+  // 植物参数
+  const PLANTS = {
+    peashooter: {
+      id: 'peashooter', displayName: '豌豆射手', cost: 100, cooldown: 5_000,
+      shootInterval: 1_450, peaSpeed: 260, damage: 20, hp: 300
+    },
+    sunflower: {
+      id: 'sunflower', displayName: '向日葵', cost: 50, cooldown: 5_500,
+      sunInterval: 7_000, hp: 250
+    },
+    wallnut: {
+      id: 'wallnut', displayName: '坚果', cost: 50, cooldown: 8_000,
+      hp: 1200
+    }
+  };
+
+  const SHOVEL = { id: 'shovel', displayName: '铲子' };
+
+  // UI 卡片渲染数据
+  const seedCards = [
+    { type: 'peashooter', color: '#76d672' },
+    { type: 'sunflower', color: '#ffd972' },
+    { type: 'wallnut', color: '#c79764' },
+    { type: 'shovel', color: '#b6c2c0' },
+  ];
+
+  // 运行时状态
+  const state = {
+    sunPoints: INITIAL_SUN,
+    selectedCard: 'peashooter',
+    // 网格植物：二位数组存对象或 null
+    plants: Array.from({ length: GRID_ROWS }, () => Array.from({ length: GRID_COLS }, () => null)),
+    // 冷却
+    cooldownEndsAt: { peashooter: 0, sunflower: 0, wallnut: 0 },
+    // 子弹、僵尸、阳光、割草机
+    peas: [],
+    zombies: [],
+    suns: [],
+    lawnmowers: [],
+    // 计时
+    lastTimestamp: 0,
+    elapsedGameMs: 0,
+    nextSkySunAt: 0,
+    nextZombieSpawnAt: 0,
+    // 结算
+    isGameOver: false,
+    isWin: false,
+  };
+
+  // 割草机初始化
+  for (let r = 0; r < GRID_ROWS; r++) {
+    state.lawnmowers.push({ row: r, x: GRID_OFFSET_X - 56, y: GRID_OFFSET_Y + r * CELL_HEIGHT + CELL_HEIGHT/2, speed: 0, armed: true, active: false });
+  }
+
+  // 设备像素比缩放，保持逻辑坐标不变
+  function resizeCanvas() {
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    canvas.width = Math.floor(LOGICAL_WIDTH * dpr);
+    canvas.height = Math.floor(LOGICAL_HEIGHT * dpr);
+    canvas.style.width = LOGICAL_WIDTH + 'px';
+    canvas.style.height = LOGICAL_HEIGHT + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // 生成 UI 卡片
+  const seedbar = document.getElementById('seedbar');
+  function renderSeedbar() {
+    seedbar.innerHTML = '';
+    const now = performance.now();
+    for (const card of seedCards) {
+      const div = document.createElement('div');
+      div.className = 'card' + (state.selectedCard === card.type ? ' selected' : '');
+      div.style.background = `linear-gradient(180deg, ${card.color}33, ${card.color}22)`;
+
+      let title = '', cost = '';
+      if (card.type === 'shovel') {
+        title = '铲子';
+        cost = '移除植物';
+      } else {
+        const p = PLANTS[card.type];
+        title = p.displayName;
+        cost = `${p.cost} 阳光`;
+        const cd = Math.max(0, state.cooldownEndsAt[card.type] - now);
+        if (cd > 0) div.classList.add('locked');
+        if (state.sunPoints < p.cost) div.style.filter = 'grayscale(0.4) brightness(0.8)';
+      }
+
+      div.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;">${title}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
+          <span>${cost}</span>
+          <span>${hotkeyLabel(card.type)}</span>
+        </div>
+      `;
+
+      div.addEventListener('click', () => {
+        state.selectedCard = card.type;
+        renderSeedbar();
+      });
+
+      seedbar.appendChild(div);
+    }
+  }
+  function hotkeyLabel(type) {
+    if (type === 'peashooter') return '1';
+    if (type === 'sunflower') return '2';
+    if (type === 'wallnut') return '3';
+    if (type === 'shovel') return '4';
+    return '';
+  }
+  renderSeedbar();
+
+  // 顶部阳光显示
+  const sunPointsEl = document.getElementById('sunPoints');
+  function updateSunCounter() {
+    sunPointsEl.textContent = String(state.sunPoints);
+  }
+  updateSunCounter();
+
+  // ---------------------- 工具函数 ----------------------
+  function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+  function randRange(min, max) { return Math.random() * (max - min) + min; }
+  function randInt(min, maxInclusive) { return Math.floor(Math.random() * (maxInclusive - min + 1)) + min; }
+  function nowMs() { return performance.now(); }
+
+  function gridToPixel(col, row) {
+    const x = GRID_OFFSET_X + col * CELL_WIDTH;
+    const y = GRID_OFFSET_Y + row * CELL_HEIGHT;
+    return { x, y };
+  }
+  function pixelToGrid(x, y) {
+    const col = Math.floor((x - GRID_OFFSET_X) / CELL_WIDTH);
+    const row = Math.floor((y - GRID_OFFSET_Y) / CELL_HEIGHT);
+    if (col < 0 || col >= GRID_COLS || row < 0 || row >= GRID_ROWS) return null;
+    return { col, row };
+  }
+
+  function isCellEmpty(row, col) {
+    return !state.plants[row][col];
+  }
+
+  // ---------------------- 游戏对象操作 ----------------------
+  function addPea(row, x, y) {
+    state.peas.push({ row, x, y, speed: PLANTS.peashooter.peaSpeed, radius: 6, damage: PLANTS.peashooter.damage, alive: true });
+  }
+
+  function addSun(x, y, source = 'sky') {
+    const life = 7_500; // 点击前存活
+    // 若来自向日葵则上浮一点
+    let vy = source === 'sky' ? (CELL_HEIGHT / SKY_SUN_FALL_TIME) * (LOGICAL_HEIGHT - 40) : -10;
+    state.suns.push({ x, y, vy, bornAt: nowMs(), ttl: life, collected: false, radius: 16 });
+  }
+
+  function spawnZombie() {
+    const row = randInt(0, GRID_ROWS - 1);
+    const { x: gx, y: gy } = gridToPixel(GRID_COLS, row); // 出现在网格右侧外
+    const progress = clamp(state.elapsedGameMs / DIFFICULTY_DURATION, 0, 1);
+    const speed = ZOMBIE_BASE_SPEED * (0.9 + progress * 0.9); // 越来越快
+    const maxHp = Math.floor(ZOMBIE_BASE_HP * (1 + progress * 1.2));
+    state.zombies.push({ row, x: gx + 60, y: gy + CELL_HEIGHT/2, speed, hp: maxHp, maxHp, eating: false, targetCell: null, alive: true });
+  }
+
+  function activateLawnmower(row) {
+    const lm = state.lawnmowers[row];
+    if (!lm || !lm.armed) return;
+    lm.armed = false;
+    lm.active = true;
+    lm.speed = 520; // 直接清屏该行
+  }
+
+  // ---------------------- 交互 ----------------------
+  canvas.addEventListener('mousedown', (e) => {
+    if (state.isGameOver) return;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = LOGICAL_WIDTH / rect.width;
+    const scaleY = LOGICAL_HEIGHT / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+
+    // 先判定点到阳光
+    for (let i = state.suns.length - 1; i >= 0; i--) {
+      const s = state.suns[i];
+      const dx = x - s.x, dy = y - s.y;
+      if (dx*dx + dy*dy <= (s.radius + 2) * (s.radius + 2)) {
+        state.sunPoints += 25;
+        updateSunCounter();
+        s.collected = true;
+        s.ttl = 0;
+        return;
+      }
+    }
+
+    // 再判定种植
+    const grid = pixelToGrid(x, y);
+    if (!grid) return;
+    const { row, col } = grid;
+
+    if (state.selectedCard === 'shovel') {
+      if (state.plants[row][col]) {
+        state.plants[row][col] = null;
+      }
+      return;
+    }
+
+    const type = state.selectedCard;
+    if (!PLANTS[type]) return;
+
+    const now = nowMs();
+    const cdRemain = Math.max(0, state.cooldownEndsAt[type] - now);
+    if (cdRemain > 0) return;
+
+    if (!isCellEmpty(row, col)) return;
+
+    const config = PLANTS[type];
+    if (state.sunPoints < config.cost) return;
+
+    // 扣费
+    state.sunPoints -= config.cost;
+    updateSunCounter();
+
+    // 下种
+    const { x: cellX, y: cellY } = gridToPixel(col, row);
+    const plant = createPlant(type, row, col, cellX + CELL_WIDTH/2, cellY + CELL_HEIGHT/2);
+    state.plants[row][col] = plant;
+
+    // 冷却
+    state.cooldownEndsAt[type] = now + config.cooldown;
+    renderSeedbar();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '1') { state.selectedCard = 'peashooter'; renderSeedbar(); }
+    else if (e.key === '2') { state.selectedCard = 'sunflower'; renderSeedbar(); }
+    else if (e.key === '3') { state.selectedCard = 'wallnut'; renderSeedbar(); }
+    else if (e.key === '4') { state.selectedCard = 'shovel'; renderSeedbar(); }
+    else if (e.key.toLowerCase() === 'r') { restart(); }
+  });
+
+  // ---------------------- 植物定义 ----------------------
+  function createPlant(type, row, col, x, y) {
+    const base = { type, row, col, x, y, hp: 1, maxHp: 1, alive: true, nextActionAt: 0 };
+    if (type === 'peashooter') {
+      const cfg = PLANTS.peashooter;
+      return { ...base, hp: cfg.hp, maxHp: cfg.hp, nextActionAt: nowMs() + 800 };
+    }
+    if (type === 'sunflower') {
+      const cfg = PLANTS.sunflower;
+      return { ...base, hp: cfg.hp, maxHp: cfg.hp, nextActionAt: nowMs() + 3_000 };
+    }
+    if (type === 'wallnut') {
+      const cfg = PLANTS.wallnut;
+      return { ...base, hp: cfg.hp, maxHp: cfg.hp };
+    }
+    return base;
+  }
+
+  function updatePlants(dtMs) {
+    const now = nowMs();
+    for (let r = 0; r < GRID_ROWS; r++) {
+      for (let c = 0; c < GRID_COLS; c++) {
+        const p = state.plants[r][c];
+        if (!p || !p.alive) continue;
+        if (p.type === 'peashooter') {
+          // 若该行有僵尸且在右侧，进行射击
+          const hasTarget = state.zombies.some(z => z.alive && z.row === p.row && z.x > p.x - 10);
+          if (hasTarget && now >= p.nextActionAt) {
+            addPea(p.row, p.x + 18, p.y - 6);
+            p.nextActionAt = now + PLANTS.peashooter.shootInterval;
+          }
+        } else if (p.type === 'sunflower') {
+          if (now >= p.nextActionAt) {
+            addSun(p.x + randRange(-18, 18), p.y + randRange(-12, -6), 'sunflower');
+            p.nextActionAt = now + PLANTS.sunflower.sunInterval;
+          }
+        } else if (p.type === 'wallnut') {
+          // 坚果无主动行为
+        }
+      }
+    }
+  }
+
+  // ---------------------- 僵尸逻辑 ----------------------
+  function updateZombies(dtMs) {
+    const dt = dtMs / 1000;
+    for (const z of state.zombies) {
+      if (!z.alive) continue;
+      // 检查当前格子是否有植物
+      const col = Math.floor((z.x - GRID_OFFSET_X) / CELL_WIDTH);
+      const row = z.row;
+      let targetPlant = null;
+      if (col >= 0 && col < GRID_COLS) {
+        targetPlant = state.plants[row][col];
+      }
+
+      if (targetPlant && targetPlant.alive) {
+        // 啃咬
+        z.eating = true;
+        const dps = 38; // 每秒伤害
+        targetPlant.hp -= dps * dt;
+        if (targetPlant.hp <= 0) {
+          state.plants[row][col] = null;
+          z.eating = false;
+        }
+      } else {
+        // 前进
+        z.eating = false;
+        z.x -= z.speed * dt;
+      }
+
+      // 到家失败
+      if (z.x < GRID_OFFSET_X - 10) {
+        // 尝试触发割草机
+        const lm = state.lawnmowers[row];
+        if (lm && lm.armed) {
+          activateLawnmower(row);
+          // 把僵尸推回一点，避免立刻判负
+          z.x = GRID_OFFSET_X + 2;
+        } else {
+          gameOver(false);
+        }
+      }
+    }
+
+    // 割草机清场
+    for (const lm of state.lawnmowers) {
+      if (!lm.active) continue;
+      const dt = dtMs / 1000;
+      lm.x += lm.speed * dt;
+      // 碰撞僵尸全部秒杀
+      for (const z of state.zombies) {
+        if (!z.alive) continue;
+        if (z.row !== lm.row) continue;
+        if (z.x < lm.x + 38 && z.x > lm.x - 38) {
+          z.hp = 0; z.alive = false;
+        }
+      }
+    }
+
+    // 清理死亡僵尸
+    state.zombies = state.zombies.filter(z => z.alive || z.hp > 0);
+  }
+
+  // ---------------------- 子弹逻辑 ----------------------
+  function updatePeas(dtMs) {
+    const dt = dtMs / 1000;
+    for (const pea of state.peas) {
+      if (!pea.alive) continue;
+      pea.x += pea.speed * dt;
+      // 碰撞检测：命中同一行第一个僵尸
+      let hit = null;
+      for (const z of state.zombies) {
+        if (!z.alive) continue;
+        if (z.row !== pea.row) continue;
+        // 简化矩形
+        const half = 32;
+        if (pea.x >= z.x - half && pea.x <= z.x + half) { hit = z; break; }
+      }
+      if (hit) {
+        hit.hp -= pea.damage;
+        if (hit.hp <= 0) { hit.alive = false; }
+        pea.alive = false;
+      }
+      if (pea.x > GRID_OFFSET_X + GRID_WIDTH + 40) pea.alive = false;
+    }
+    state.peas = state.peas.filter(p => p.alive);
+  }
+
+  // ---------------------- 阳光逻辑 ----------------------
+  function updateSuns(dtMs) {
+    const t = nowMs();
+    for (const s of state.suns) {
+      if (s.collected) continue;
+      s.ttl -= dtMs;
+      s.y += s.vy * (dtMs / 1000);
+      if (s.vy > 0) {
+        // 天空掉落到底部一定高度就停止
+        const groundY = GRID_OFFSET_Y + GRID_HEIGHT - 30 - randRange(0, 60);
+        if (s.y >= groundY) {
+          s.vy = 0;
+        }
+      } else if (s.vy < 0) {
+        // 向日葵生成上浮减速
+        s.vy += 30 * (dtMs / 1000);
+        if (s.vy > 0) s.vy = 0;
+      }
+    }
+    // 清理
+    state.suns = state.suns.filter(s => s.ttl > 0);
+
+    // 天空生成
+    if (t >= state.nextSkySunAt) {
+      const col = randInt(0, GRID_COLS - 1);
+      const { x } = gridToPixel(col, 0);
+      addSun(x + CELL_WIDTH / 2, -10, 'sky');
+      const progress = clamp(state.elapsedGameMs / DIFFICULTY_DURATION, 0, 1);
+      state.nextSkySunAt = t + SKY_SUN_INTERVAL * (1.0 - 0.3 * progress);
+    }
+  }
+
+  // ---------------------- 生成僵尸节奏 ----------------------
+  function updateSpawns() {
+    const t = nowMs();
+    if (t >= state.nextZombieSpawnAt) {
+      spawnZombie();
+      const progress = clamp(state.elapsedGameMs / DIFFICULTY_DURATION, 0, 1);
+      const interval = ZOMBIE_SPAWN_BASE - (ZOMBIE_SPAWN_BASE - ZOMBIE_SPAWN_MIN) * progress;
+      const jitter = randRange(-300, 300);
+      state.nextZombieSpawnAt = t + Math.max(800, interval + jitter);
+    }
+  }
+
+  // ---------------------- 主循环 ----------------------
+  function gameLoop(ts) {
+    if (!state.lastTimestamp) state.lastTimestamp = ts;
+    const dtMs = clamp(ts - state.lastTimestamp, 0, 48); // 限帧避免跳变
+    state.lastTimestamp = ts;
+
+    if (!state.isGameOver) state.elapsedGameMs += dtMs;
+
+    // 更新
+    if (!state.isGameOver) {
+      updatePlants(dtMs);
+      updatePeas(dtMs);
+      updateZombies(dtMs);
+      updateSuns(dtMs);
+      updateSpawns();
+      checkWinCondition();
+    }
+
+    // 渲染
+    draw();
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  // ---------------------- 胜负判定 ----------------------
+  function checkWinCondition() {
+    const progress = clamp(state.elapsedGameMs / DIFFICULTY_DURATION, 0, 1);
+    if (progress >= 1 && state.zombies.every(z => !z.alive || z.hp <= 0 || z.x < GRID_OFFSET_X - 10)) {
+      gameOver(true);
+    }
+  }
+
+  function gameOver(win) {
+    state.isGameOver = true;
+    state.isWin = !!win;
+    showBanner(win ? '你赢了！' : '你输了！', win ? '成功抵御了僵尸的进攻！' : '僵尸吃掉了你的脑子……');
+  }
+
+  function restart() {
+    // 重置状态
+    state.sunPoints = INITIAL_SUN; updateSunCounter();
+    state.selectedCard = 'peashooter';
+    state.plants = Array.from({ length: GRID_ROWS }, () => Array.from({ length: GRID_COLS }, () => null));
+    state.cooldownEndsAt = { peashooter: 0, sunflower: 0, wallnut: 0 };
+    state.peas = [];
+    state.zombies = [];
+    state.suns = [];
+    state.lawnmowers = [];
+    for (let r = 0; r < GRID_ROWS; r++) state.lawnmowers.push({ row: r, x: GRID_OFFSET_X - 56, y: GRID_OFFSET_Y + r * CELL_HEIGHT + CELL_HEIGHT/2, speed: 0, armed: true, active: false });
+    state.lastTimestamp = 0;
+    state.elapsedGameMs = 0;
+    state.nextSkySunAt = nowMs() + 800;
+    state.nextZombieSpawnAt = nowMs() + 1400;
+    state.isGameOver = false;
+    state.isWin = false;
+    hideBanner();
+    renderSeedbar();
+  }
+
+  // ---------------------- 画面渲染 ----------------------
+  function drawGrid() {
+    // 草地底色
+    ctx.fillStyle = '#1a3b2b';
+    ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+
+    // 草坪棋盘
+    for (let r = 0; r < GRID_ROWS; r++) {
+      for (let c = 0; c < GRID_COLS; c++) {
+        const { x, y } = gridToPixel(c, r);
+        const even = (r + c) % 2 === 0;
+        ctx.fillStyle = even ? getComputedStyle(document.documentElement).getPropertyValue('--lawn-1').trim() : getComputedStyle(document.documentElement).getPropertyValue('--lawn-2').trim();
+        ctx.fillRect(x + 1, y + 1, CELL_WIDTH - 2, CELL_HEIGHT - 2);
+      }
+    }
+
+    // 竖向分隔线（淡）
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+    ctx.lineWidth = 1;
+    for (let c = 0; c <= GRID_COLS; c++) {
+      const x = GRID_OFFSET_X + c * CELL_WIDTH + 0.5;
+      ctx.beginPath();
+      ctx.moveTo(x, GRID_OFFSET_Y);
+      ctx.lineTo(x, GRID_OFFSET_Y + GRID_HEIGHT);
+      ctx.stroke();
+    }
+  }
+
+  function drawPlants() {
+    for (let r = 0; r < GRID_ROWS; r++) {
+      for (let c = 0; c < GRID_COLS; c++) {
+        const p = state.plants[r][c];
+        if (!p) continue;
+        if (p.type === 'peashooter') drawPeashooter(p);
+        else if (p.type === 'sunflower') drawSunflower(p);
+        else if (p.type === 'wallnut') drawWallnut(p);
+      }
+    }
+  }
+
+  function drawPeashooter(p) {
+    // 身体
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    // 影子
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath(); ctx.ellipse(0, 20, 22, 8, 0, 0, Math.PI*2); ctx.fill();
+
+    // 茎
+    ctx.fillStyle = '#2a7a3f';
+    ctx.fillRect(-4, -4, 8, 22);
+
+    // 头
+    ctx.fillStyle = '#80e783';
+    ctx.beginPath(); ctx.arc(14, -2, 16, 0, Math.PI*2); ctx.fill();
+
+    // 嘴
+    ctx.fillStyle = '#4caf50';
+    ctx.beginPath(); ctx.ellipse(26, -2, 10, 8, 0, 0, Math.PI*2); ctx.fill();
+
+    // 眼睛
+    ctx.fillStyle = '#123';
+    ctx.beginPath(); ctx.arc(10, -8, 2.8, 0, Math.PI*2); ctx.arc(19, -10, 2.8, 0, Math.PI*2); ctx.fill();
+
+    // 血条
+    drawHpBar(p.x - 26, p.y - 34, 52, 6, p.hp / p.maxHp);
+    ctx.restore();
+  }
+
+  function drawSunflower(p) {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    // 影子
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath(); ctx.ellipse(0, 20, 22, 8, 0, 0, Math.PI*2); ctx.fill();
+
+    // 茎
+    ctx.fillStyle = '#2a7a3f';
+    ctx.fillRect(-4, -2, 8, 20);
+
+    // 花瓣
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2;
+      ctx.fillStyle = '#ffd15a';
+      ctx.beginPath();
+      ctx.ellipse(Math.cos(angle)*16, Math.sin(angle)*10 - 8, 6, 10, angle, 0, Math.PI*2);
+      ctx.fill();
+    }
+    // 花盘
+    ctx.fillStyle = '#8b5e3c';
+    ctx.beginPath(); ctx.arc(0, -8, 12, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#643b1c';
+    ctx.beginPath(); ctx.arc(-3, -10, 2.6, 0, Math.PI*2); ctx.arc(3, -10, 2.6, 0, Math.PI*2); ctx.fill();
+
+    // 血条
+    drawHpBar(p.x - 26, p.y - 34, 52, 6, p.hp / p.maxHp);
+    ctx.restore();
+  }
+
+  function drawWallnut(p) {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    // 影子
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath(); ctx.ellipse(0, 20, 26, 10, 0, 0, Math.PI*2); ctx.fill();
+
+    // 坚果体
+    ctx.fillStyle = '#b27a43';
+    ctx.beginPath(); ctx.ellipse(0, -2, 24, 30, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#7a4f28';
+    ctx.beginPath(); ctx.arc(-6, -10, 3.2, 0, Math.PI*2); ctx.arc(6, -10, 3.2, 0, Math.PI*2); ctx.fill();
+
+    // 血条
+    drawHpBar(p.x - 30, p.y - 40, 60, 7, p.hp / p.maxHp);
+    ctx.restore();
+  }
+
+  function drawHpBar(x, y, w, h, ratio) {
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+    ctx.fillRect(x - 1, y - 1, w + 2, h + 2);
+    ctx.fillStyle = '#2b412f';
+    ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = ratio > 0.5 ? '#76e06f' : ratio > 0.2 ? '#ffd15a' : '#ff6b6b';
+    ctx.fillRect(x, y, w * clamp(ratio, 0, 1), h);
+  }
+
+  function drawZombies() {
+    for (const z of state.zombies) {
+      if (!z.alive) continue;
+      // 身体
+      ctx.save();
+      ctx.translate(z.x, z.y);
+      // 影子
+      ctx.fillStyle = 'rgba(0,0,0,0.25)';
+      ctx.beginPath(); ctx.ellipse(-6, 18, 26, 9, 0, 0, Math.PI*2); ctx.fill();
+
+      // 身体
+      ctx.fillStyle = '#9ab3a8';
+      ctx.fillRect(-20, -26, 40, 46);
+      // 头
+      ctx.fillStyle = '#b5c7c0';
+      ctx.beginPath(); ctx.arc(6, -32, 14, 0, Math.PI*2); ctx.fill();
+      // 眼睛
+      ctx.fillStyle = '#213';
+      ctx.beginPath(); ctx.arc(1, -34, 3, 0, Math.PI*2); ctx.arc(10, -34, 3, 0, Math.PI*2); ctx.fill();
+      // 嘴
+      ctx.fillStyle = '#6b3b2a';
+      ctx.fillRect(0, -24, 12, 3);
+
+      // 啃咬动画提示
+      if (z.eating) {
+        ctx.fillStyle = '#ffb347';
+        ctx.beginPath(); ctx.arc(16, -28, 4, 0, Math.PI*2); ctx.fill();
+      }
+
+      // 血条
+      const ratio = z.hp / z.maxHp;
+      drawHpBar(z.x - 26, z.y - 48, 52, 6, ratio);
+      ctx.restore();
+    }
+  }
+
+  function drawPeas() {
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--pea').trim();
+    for (const pea of state.peas) {
+      ctx.beginPath(); ctx.arc(pea.x, pea.y, pea.radius, 0, Math.PI*2); ctx.fill();
+      // 小光点
+      ctx.fillStyle = 'rgba(255,255,255,0.75)';
+      ctx.beginPath(); ctx.arc(pea.x - 2, pea.y - 2.5, 1.5, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--pea').trim();
+    }
+  }
+
+  function drawSuns() {
+    for (const s of state.suns) {
+      ctx.save();
+      ctx.translate(s.x, s.y);
+      // 光晕
+      const g = ctx.createRadialGradient(0, 0, 2, 0, 0, 22);
+      g.addColorStop(0, 'rgba(255, 242, 168, 0.95)');
+      g.addColorStop(1, 'rgba(255, 210, 77, 0.1)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(0, 0, 22, 0, Math.PI*2); ctx.fill();
+
+      // 太阳球
+      const g2 = ctx.createRadialGradient(-6, -6, 1, 0, 0, 16);
+      g2.addColorStop(0, '#fff5bc');
+      g2.addColorStop(1, '#ffcf53');
+      ctx.fillStyle = g2;
+      ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function drawLawnmowers() {
+    for (const lm of state.lawnmowers) {
+      ctx.save();
+      ctx.translate(lm.x, lm.y);
+      // 车体
+      ctx.fillStyle = '#d9534f';
+      ctx.fillRect(-24, -14, 48, 22);
+      // 轮子
+      ctx.fillStyle = '#222';
+      ctx.beginPath(); ctx.arc(-14, 10, 7, 0, Math.PI*2); ctx.arc(14, 10, 7, 0, Math.PI*2); ctx.fill();
+      // 轮轴
+      ctx.fillStyle = '#999'; ctx.beginPath(); ctx.arc(-14, 10, 3, 0, Math.PI*2); ctx.arc(14, 10, 3, 0, Math.PI*2); ctx.fill();
+      // 拉杆
+      ctx.fillStyle = '#bbb'; ctx.fillRect(8, -20, 4, 12);
+      ctx.restore();
+    }
+  }
+
+  function drawTopOverlay() {
+    // 进度条
+    const margin = 16;
+    const w = 280, h = 10;
+    const x = LOGICAL_WIDTH - w - margin - 12; // 右下角稍靠上
+    const y = LOGICAL_HEIGHT - h - margin;
+    const ratio = clamp(state.elapsedGameMs / DIFFICULTY_DURATION, 0, 1);
+
+    ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fillRect(x - 1, y - 1, w + 2, h + 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(x, y, w, h);
+    const grad = ctx.createLinearGradient(x, y, x + w, y);
+    grad.addColorStop(0, '#6be06b'); grad.addColorStop(1, '#ffd15a');
+    ctx.fillStyle = grad; ctx.fillRect(x, y, w * ratio, h);
+
+    // 文案
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.fillText('进度', x - 34, y + 9);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+    drawGrid();
+    drawLawnmowers();
+    drawPlants();
+    drawPeas();
+    drawZombies();
+    drawSuns();
+    drawTopOverlay();
+  }
+
+  // ---------------------- 横幅提示 ----------------------
+  let bannerDiv = null;
+  function showBanner(title, subtitle) {
+    if (!bannerDiv) {
+      bannerDiv = document.createElement('div');
+      bannerDiv.className = 'banner';
+      document.querySelector('.overlay').appendChild(bannerDiv);
+    }
+    bannerDiv.innerHTML = `
+      <div style="font-weight:900;font-size:22px;margin-bottom:6px;">${title}</div>
+      <div style="opacity:.9">${subtitle}</div>
+      <button class="btn" id="restartBtn">再来一局 (R)</button>
+    `;
+    const btn = bannerDiv.querySelector('#restartBtn');
+    btn.addEventListener('click', restart);
+    bannerDiv.style.display = 'inline-block';
+  }
+  function hideBanner() {
+    if (bannerDiv) bannerDiv.style.display = 'none';
+  }
+
+  // ---------------------- 初始化并启动 ----------------------
+  function init() {
+    state.nextSkySunAt = nowMs() + 1200;
+    state.nextZombieSpawnAt = nowMs() + 1800;
+    requestAnimationFrame(gameLoop);
+  }
+
+  init();
+})();
+</script>
+</body>
 </html>
